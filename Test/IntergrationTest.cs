@@ -1,36 +1,46 @@
 ﻿using NUnit.Framework;
 using FileSearcher;
-
+using Moq;
+using System.Security.Permissions;
 
 namespace Test
 {
-    public class TestSearcherTest
+    public class IntergrationTest
     {
 
         readonly string  dirName = "TestDir";
+        Searcher searcher;
+
+        [SetUp]
+        public void Setup()
+        {
+            searcher = new Searcher(new SearchService());
+        }
+        
+
         
 
         [Test]
         public void ThrowsInvalidDirectoryException()
         {
-            Assert.Throws<DirectoryNotFoundException>(() => new Seacher("lol")); ;
+            Assert.Throws<DirectoryNotFoundException>(() => searcher.Search("lol", "hello"));
         }
 
-        [Test]
-        public void CanLoadDirectory()
-        {
+        //[Test]
+        //public void CanLoadDirectory()
+        //{
            
 
-            //Arrange
-            var path = Path.Combine(Directory.GetCurrentDirectory(), dirName);
+        //    //Arrange
+        //    var path = Path.Combine(Directory.GetCurrentDirectory(), dirName);
 
 
-            //Test
-            var fileSearcher = new Seacher(path);
+        //    //Test
+        //    var fileSearcher = new Seacher(path);
 
-            //Assert
-            Assert.That(dirName, Is.EqualTo(fileSearcher.GetPath()));
-        }
+        //    //Assert
+        //    Assert.That(dirName, Is.EqualTo(fileSearcher.GetPath()));
+        //}
 
         [Test]
         public void GetsASingleFile()
@@ -38,9 +48,8 @@ namespace Test
             //Arrange
             var path = Path.Combine(Directory.GetCurrentDirectory(), dirName);
 
-            //Test
-            var fileSearcher = new Seacher(path);
-            var files = fileSearcher.Search("Goodbye");
+            //Act
+            var files = searcher.Search(path, "Goodbye");
 
             //Assert
             Assert.That(files.Count(), Is.EqualTo(1));
@@ -53,8 +62,7 @@ namespace Test
             var path = Path.Combine(Directory.GetCurrentDirectory(), dirName);
 
             //Test
-            var fileSearcher = new Seacher(path);
-            var files = fileSearcher.Search("Hello");
+            var files = searcher.Search(path, "Hello"); ;
 
             //Assert
             Assert.That(files.Count(), Is.EqualTo(2));
@@ -67,8 +75,7 @@ namespace Test
             var path = Path.Combine(Directory.GetCurrentDirectory(), dirName);
 
             //Test
-            var fileSearcher = new Seacher(path);
-            var files = fileSearcher.Search("Hel");
+            var files = searcher.Search(path, "Hel"); ;
 
             //Assert
             Assert.That(files.Count(), Is.EqualTo(2));
@@ -81,8 +88,7 @@ namespace Test
             var path = Path.Combine(Directory.GetCurrentDirectory(), dirName);
 
             //Test
-            var fileSearcher = new Seacher(path);
-            var files = fileSearcher.Search("bob");
+            var files = searcher.Search(path, "bob");
 
             //Assert
             Assert.That(files.Count(), Is.EqualTo(2));

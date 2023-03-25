@@ -4,20 +4,19 @@
     {
         public static int Main(string[] args)
         {
+            var searcher = new Searcher(new SearchService());
             int result = 1;
             string directory = GetUserInput("Enter a directory");
-
             try
             {
-                var search = new Seacher(directory);
                 string searchTerm = GetUserInput("Enter a search term");
                 Console.WriteLine("Your results are:");  
-                var files = search.Search(searchTerm);
+                var files = searcher.Search(directory, searchTerm);
                 Console.WriteLine(string.Join(Environment.NewLine, files));
                 result = 0;
 
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.WriteLine("Directory not found");
                 return result;
